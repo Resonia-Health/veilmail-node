@@ -74,7 +74,7 @@ export class HttpClient {
     const headers: Record<string, string> = {
       'Authorization': `Bearer ${this.apiKey}`,
       'Content-Type': 'application/json',
-      'User-Agent': '@resonia/veilmail-sdk/0.2.0',
+      'User-Agent': '@resonia/veilmail-sdk/0.3.0',
       ...options.headers,
     }
 
