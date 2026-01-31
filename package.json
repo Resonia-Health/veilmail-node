@@ -1,0 +1,59 @@
+{
+  "name": "@resonia/veilmail-sdk",
+  "version": "0.2.0",
+  "description": "Official Node.js SDK for Veil Mail - Secure email with automatic PII protection",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "test:manual": "tsx test/manual-test.ts",
+    "prepublishOnly": "bun run build"
+  },
+  "keywords": [
+    "email",
+    "api",
+    "sdk",
+    "veilmail",
+    "pii",
+    "security",
+    "transactional-email",
+    "email-api"
+  ],
+  "author": "Resonia Inc",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Resonia-Health/veilmail-node"
+  },
+  "homepage": "https://veilmail.xyz/docs/sdk",
+  "bugs": {
+    "url": "https://github.com/Resonia-Health/veilmail-node/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@veil/eslint-config": "workspace:*",
+    "eslint": "^9.17.0",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
