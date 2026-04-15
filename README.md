@@ -1,6 +1,27 @@
 # @resonia/veilmail-sdk
 
-The official Node.js SDK for [Veil Mail](https://veilmail.xyz) - secure email with automatic PII protection.
+[![npm version](https://img.shields.io/npm/v/@resonia/veilmail-sdk.svg)](https://www.npmjs.com/package/@resonia/veilmail-sdk)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org/)
+
+The official Node.js and TypeScript SDK for [Veil Mail](https://veilmail.xyz) — secure transactional and marketing email with automatic PII protection, CASL compliance, and a developer-first API.
+
+> **Veil Mail is a drop-in alternative to [Resend](https://veilmail.xyz/vs/resend), [SendGrid](https://veilmail.xyz/vs/sendgrid), [Mailgun](https://veilmail.xyz/vs/mailgun), and [Postmark](https://veilmail.xyz/vs/postmark).** The SDK mirrors the Resend client shape, so most migrations are a package swap and a constructor change.
+
+```typescript
+// Before — Resend
+import { Resend } from 'resend'
+const resend = new Resend('re_xxxxx')
+await resend.emails.send({ from, to, subject, html })
+
+// After — Veil Mail
+import { VeilMail } from '@resonia/veilmail-sdk'
+const client = new VeilMail('veil_live_xxxxx')
+await client.emails.send({ from, to, subject, html })
+```
+
+**Migration guides:** [from Resend](https://veilmail.xyz/docs/guides/migrate-resend) · [from SendGrid](https://veilmail.xyz/docs/guides/migrate-sendgrid) · [from Mailgun](https://veilmail.xyz/docs/guides/migrate-mailgun) · [from Postmark](https://veilmail.xyz/docs/guides/migrate-postmark)
 
 ## Installation
 
@@ -311,28 +332,45 @@ If linking the SDK locally in a monorepo, use `file:` protocol instead of `link:
 }
 ```
 
-## Migrating from Resend
+## Migrating from another provider
 
-If you're migrating from Resend, note these API differences:
+Veil Mail's SDK and REST API are designed to be a drop-in replacement for the major transactional email providers. See the full side-by-side migration guides:
 
-| Resend | Veil Mail |
-|--------|-----------|
-| `{ data, error }` return pattern | Direct return, throws on error |
-| `resend.emails.send()` | `client.emails.send()` |
-| Manual PII handling | Automatic PII scanning |
+- [**Migrating from Resend**](https://veilmail.xyz/docs/guides/migrate-resend) — near-identical SDK shape. Package swap + constructor change.
+- [**Migrating from SendGrid**](https://veilmail.xyz/docs/guides/migrate-sendgrid) — replace `@sendgrid/mail`, map dynamic templates, update webhook verification.
+- [**Migrating from Mailgun**](https://veilmail.xyz/docs/guides/migrate-mailgun) — swap the form-data API for a JSON REST client. Routes and SMTP relay supported.
+- [**Migrating from Postmark**](https://veilmail.xyz/docs/guides/migrate-postmark) — map message streams to the `type` field. Inbound email supported.
+
+### Resend-specific notes
+
+Veil Mail throws typed errors instead of Resend's `{ data, error }` return pattern:
 
 ```typescript
 // Resend pattern
 const { data, error } = await resend.emails.send({ ... });
 if (error) { /* handle */ }
 
-// Veil Mail pattern (cleaner)
+// Veil Mail pattern
 try {
   const email = await client.emails.send({ ... });
 } catch (error) {
-  // Handle typed errors
+  // Handle typed errors — AuthenticationError, ValidationError,
+  // PiiDetectedError, RateLimitError, VeilMailError
 }
 ```
+
+Webhook event names map almost one-to-one. The only rename is `email.delivery_delayed` → `email.deferred`. Use the `X-VeilMail-Signature` header for HMAC-SHA256 signature verification.
+
+## Resources
+
+- [Full documentation](https://veilmail.xyz/docs)
+- [SDK reference](https://veilmail.xyz/docs/sdk)
+- [Email API reference](https://veilmail.xyz/docs/emails)
+- [Authentication](https://veilmail.xyz/docs/authentication)
+- [Webhooks](https://veilmail.xyz/docs/webhooks)
+- [React Email adapter](https://veilmail.xyz/docs/react-email)
+- [MCP server for Claude/Cursor](https://veilmail.xyz/docs/mcp)
+- Framework guides: [Next.js](https://veilmail.xyz/docs/guides/nextjs) · [Express](https://veilmail.xyz/docs/guides/express) · [Fastify](https://veilmail.xyz/docs/guides/fastify) · [Laravel](https://veilmail.xyz/docs/guides/laravel) · [Rails](https://veilmail.xyz/docs/guides/rails)
 
 ## Troubleshooting
 
