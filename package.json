@@ -23,6 +23,8 @@
     "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "test:manual": "tsx test/manual-test.ts",
     "prepublishOnly": "bun run build"
   },
